@@ -1,0 +1,42 @@
+{
+    "header" : {
+        "commonHeader" : "Form form = bean.getForm();",
+        "methodName" : "myMethod",
+        "callOfTheMethodStr" : "strResult = myMethod(myPassedVar); ",
+        "throwsStr" : "throws Exception"
+    },
+
+    "firstNode": {
+        "trueConditions": ["myvar= true;", "myVar2=\"myStr\";"],
+        "falseConditions": [],
+        "assertTrue": "Assert.assertEquals(expectedValue, 'strResult');",
+        "assertFalse": "",
+        "caseTrueNode": {
+            "trueConditions": [],
+            "falseConditions": [],
+            "assertTrue": "",
+            "assertFalse": "",
+            "caseTrueNode": null,
+            "caseFalseNode": null,
+            "caseFollowingNode": null    
+        },
+        "caseFalseNode": {
+            "trueConditions": [],
+            "falseConditions": [],
+            "assertTrue": "",
+            "assertFalse": "",
+            "caseTrueNode": null,
+            "caseFalseNode": null,
+            "caseFollowingNode": null   
+        },
+        "caseFollowingNode": {
+            "trueConditions": [],
+            "falseConditions": [],
+            "assertTrue": "",
+            "assertFalse": "",
+            "caseTrueNode": null,
+            "caseFalseNode": null,
+            "caseFollowingNode": null    
+        }
+    }
+}

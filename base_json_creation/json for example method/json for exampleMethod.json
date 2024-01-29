@@ -1,0 +1,50 @@
+{
+    "header" : {
+        "commonHeader" : "int toChange = 4;",
+        "methodName" : "baseCaseToTest",
+        "callOfTheMethodStr" : "int result = myClass.baseCaseToTest(toChange);",
+        "throwsStr" : ""
+    },
+
+    "firstNode": {
+        "trueConditions": ["toChange=1"],
+        "falseConditions": ["//toChange!=1 \n toChange=3"],
+        "assertTrue": "Assert.assertTrue(myClass.isVarTest1());",
+        "assertFalse": "Assert.assertFalse(myClass.isVarTest1());",
+        "caseTrueNode": null,
+        "caseFalseNode": {
+            "trueConditions": ["toChange=2"],
+            "falseConditions": ["//toChange!=2 -> \ntoChange=3"],
+            "assertTrue": "Assert.assertTrue(myClass.isVarTest2());",
+            "assertFalse": "Assert.assertFalse(myClass.isVarTest2());",
+            "caseTrueNode": null,
+            "caseFalseNode": null,
+            "caseFollowingNode": null    
+        },
+        "caseFollowingNode": {
+            "trueConditions": ["myClass.setVar1(1);" , "myClass.setVar1(0); \n myClass.setVar5(\"S\");"],
+            "falseConditions": ["myClass.setVar1(2); \n myClass.setVar5(\"N\");"],
+            "assertTrue": "Assert.assertTrue(myClass.isVarTest3());",
+            "assertFalse": "Assert.assertTrue(result==1);",
+            "caseTrueNode": {
+	            "trueConditions": ["myClass.setVar4(\"change\");"],
+	            "falseConditions": ["myClass.setVar4(\"noChange\");"],
+	            "assertTrue": "Assert.assertTrue(myClass.isVarTest4());",
+	            "assertFalse": "Assert.assertFalse(myClass.isVarTest4()); \n Assert.assertTrue(result==2);",
+	            "caseTrueNode": {
+		            "trueConditions": ["myClass.setVar2(5);"],
+		            "falseConditions": ["//var2!=5 \n myClass.setVar2(7);"],
+		            "assertTrue": "Assert.assertTrue(result==-1);",
+		            "assertFalse": "Assert.assertTrue(result==0);",
+		            "caseTrueNode": null,
+		            "caseFalseNode": null,
+		            "caseFollowingNode": null    
+	            },
+	            "caseFalseNode": null,
+	            "caseFollowingNode": null    
+            },
+            "caseFalseNode": null,
+            "caseFollowingNode": null    
+        }
+    }
+}

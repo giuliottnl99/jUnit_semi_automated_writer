@@ -1,0 +1,304 @@
+  <!-- <script src="js/htmlModificatorsOld.js"></script> -->
+  <script src="js/generatorUtils.js"></script>
+  <script src="js/generatorLogic.js"></script>
+  <script src="js/assertTransformationLogic.js"></script>
+  <script src="js/CondizioneDaVerificare.js"></script>
+  <script src="js/creazioneCondizioni.js"></script>
+  <script src ="js/generatorLogic.js"></script>
+  <script src ="js/deleteDuplicates.js"></script>
+  <script src = "commons/languages.js"></script>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+  <div id="app">
+
+  <div style="display: grid; grid-template-columns : 3fr 1fr;"> 
+    <div></div>
+    <div style="display: grid; grid-template-columns : 5fr 1fr 5fr;">
+        <img src="img\flags\IT_FLAG.png" style="height: 75%; width: 100%" onClick="setLanguage('it', document.body.getElementsByTagName('*'))"/>
+        <div></div>
+        <img src="img\\flags\EN_FLAG.png" style="width: 100%" onClick="setLanguage('en', document.body.getElementsByTagName('*'))"/>    
+    </div>
+</div>
+
+<p id="jsonHeader">Header: </p>
+<button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" @click="changeDataOffCanvasHeader">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16">
+    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+    <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
+  </svg>
+</button>
+
+
+
+<p id="jsonBody"></p>
+<tree-element :element="completeJson.firstNode" :indent-level="0" :node-path="'base'"></tree-element>
+
+   
+<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">{{currentTitleOffCanvas}}</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <template v-if="canvasCase == 'body'">
+      <p>Condizioni true: </p> 
+      <template v-for="(condition, i) in currentDataOffCanvas.trueConditions">
+        <p>Condizione True {{(i+1)}}</p>
+        <textarea v-model="currentDataOffCanvas.trueConditions[i]" @change="showChangesInJson"></textarea>
+      </template> 
+      <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.trueConditions)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" >
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        </svg>
+      </button>
+      <button class="btn btn-danger" type="button" @click="deleteCondition(currentDataOffCanvas.trueConditions)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+          <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
+          <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+        </svg>
+      </button>
+
+      <p>Condizioni false: </p> 
+      <template v-for="(condition, i) in currentDataOffCanvas.falseConditions">
+        <p>Condizione False {{(i+1)}}</p>
+        <textarea v-model="currentDataOffCanvas.falseConditions[i]" @change="showChangesInJson"></textarea>
+      </template>
+      <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.falseConditions)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" >
+          <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+        </svg>
+      </button>
+      <button class="btn btn-danger" type="button" @click="deleteCondition(currentDataOffCanvas.falseConditions)">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+          <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
+          <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+        </svg>
+      </button>
+
+      <p> Assert true: </p>
+      <textarea v-model="currentDataOffCanvas.assertTrue" @change="showChangesInJson"></textarea>
+      <p> Assert false: </p>
+      <textarea v-model="currentDataOffCanvas.assertFalse" @change="showChangesInJson"></textarea>
+    </template>
+
+    <template v-if="canvasCase == 'header'">
+      <p>Codice comune a ogni metodo di test: </p> 
+      <textarea v-model="currentDataOffCanvas.commonHeader" @change="showChangesInJson"></textarea>
+      
+      <p>Nome del metodo: </p> 
+      <textarea v-model="currentDataOffCanvas.methodName" @change="showChangesInJson"></textarea>
+      
+      <p>Stringa chiamata del metodo: </p> 
+      <textarea v-model="currentDataOffCanvas.callOfTheMethodStr" @change="showChangesInJson"></textarea>
+      
+      <p>Eccezioni da lanciare: </p> 
+      <textarea v-model="currentDataOffCanvas.throwsStr" @change="showChangesInJson"></textarea>
+
+    </template>
+  </div>
+</div>
+
+
+<p id="toTransformInAssert"> </p>
+<textArea id="assertDaTrasformare" style="width: 100%" rows="10"></textArea>
+<button onclick="trasformaInAssert('assertDaTrasformare')" id="tranformInAssert"></button>
+
+<br/>
+<p id="toTransformCondition">  </p>
+<textArea style="width: 100%" id="condizioneDaTrasformare" rows="10"></textArea>
+<button onclick="trasformaCondizione('condizioneDaTrasformare', true)" id="transformTrue"></button>
+<button onclick="trasformaCondizione('condizioneDaTrasformare', false)" id="transformFalse"></button>
+
+<br/>
+<p id="deleteNotALlowedCharactersParagraph"> </p>
+<textarea rows="10" style="width: 100%" id="textAreaDeleteNotAllowedCharacters"></textarea>
+<button onclick="deleteNotAllowedCharacters('textAreaDeleteNotAllowedCharacters')" id="deletUnallowedCharsInJson"></button>
+
+<br/>
+<p id="deleteDuplicates"> </p>
+<textarea rows="10" style="width: 100%" id="textAreaDeleteDuplicates"></textarea>
+<button onclick="deleteDuplicatesInTextArea('textAreaDeleteDuplicates')" id="deleteDuplicates"></button>
+
+
+<br/>
+<p id="insertJsonToTransform"> </p>
+<textarea rows="30" style="width: 100%" id="jsonDataStr" @change="showStructure"></textarea>
+<label for="flgCarryOneResult" id="lblCarryOneResult">  </label><br>
+<input type="checkbox" id="flgCarryOneResult">
+<button onclick="generateOutput()" id="generateOutputButton">  </button>
+
+<br/><br/><br/>
+<p> Output: </p>
+<textarea rows="30" style="width: 100%" id="outputResult"></textarea>
+
+<script>  setLanguage("it", document.body.getElementsByTagName("*")) </script>
+
+<a id="instructions_link" href="instructions_for_user/instructions.html"></a>
+</div>
+<script>
+
+  document.addEventListener("DOMContentLoaded", (event) => {
+    let myVue = new Vue({
+      el: "#app",
+      data: {
+        completeJson : {
+          "header" : {"commonHeader" : "int myVar=7" , "methodName" : "myMethod", "callOfTheMethodStr": "myMethod(arg1, arg2)",  "throwsStr": "throws Exception"},
+          "firstNode" : { "trueConditions": [""], "falseConditions": [""], "assertTrue": "", "assertFalse": "", "caseTrueNode": null, "caseFalseNode": null, "caseFollowingNode": null
+        }
+        },
+        isComponentMounted : false,
+        currentDataOffCanvas: [],
+        currentTitleOffCanvas: "default path",
+        canvasCase: "body"
+      },  
+      methods: {
+        showStructure(){
+          let jsonDataStr = document.getElementById("jsonDataStr").value;
+          if (jsonDataStr==null || jsonDataStr=="") jsonDataStr="[]"; 
+          this.completeJson = JSON.parse(jsonDataStr)!=null ? JSON.parse(jsonDataStr) : [];
+
+        },
+        showChangesInJson(){
+          let jsonArea = document.getElementById("jsonDataStr");
+          jsonArea.value = JSON.stringify(this.completeJson, null, 2);
+        },
+        changeCurrentDataOffCanvas(elementData, nodePath) {
+          this.currentDataOffCanvas = elementData;
+          this.currentTitleOffCanvas = "nodo" + nodePath;
+          this.canvasCase = "body";
+          this.showChangesInJson();
+        },
+        changeDataOffCanvasHeader(){
+          this.currentDataOffCanvas = this.completeJson.header;
+          this.currentTitleOffCanvas = "header";
+          this.canvasCase = "header";
+          this.showChangesInJson();
+        },
+        addCondition(conditionsArray){
+          if(conditionsArray==null) conditionsArray=[""];  
+          else{
+            conditionsArray.push("");
+          }
+          this.showChangesInJson();
+        },
+        deleteCondition(conditionsArray){
+          if(!window.confirm("Sei sicuro di voler eliminare il campo?")) return;
+          conditionsArray.splice(conditionsArray.length - 1, 1);
+        }
+      },
+      mounted(){
+        this.showChangesInJson();
+        this.showStructure();
+        this.isComponentMounted = true;
+      },
+      components: ["tree-element", "show-data-element"]
+    });
+
+    Vue.component("tree-element", {
+      template: `
+        <div>
+          <span>Questo è il nodo {{ nodePath }} </span> 
+          <button class="btn btn-success" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions" @click="changeDataOffCanvas">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-plus" viewBox="0 0 16 16" @click="changeDataOffCanvas">
+              <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5V6H10a.5.5 0 0 1 0 1H8.5v1.5a.5.5 0 0 1-1 0V7H6a.5.5 0 0 1 0-1h1.5V4.5A.5.5 0 0 1 8 4"/>
+            </svg>
+          </button>
+          <button class="btn btn-danger" type="button" @click="deleteNode()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-minus" viewBox="0 0 16 16">
+                <path d="M5.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H6a.5.5 0 0 1-.5-.5"/>
+                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1"/>
+              </svg>
+          </button>
+  
+        <br/>
+
+          <template  v-if="element.caseTrueNode!=null && Object.keys(element.caseTrueNode).length > 0">
+            <tree-element :element="element.caseTrueNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'True' "></tree-element>
+          </template>
+          <template v-else>
+            <span> Aggiungi nodo true </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" @click="addNode('caseTrueNode')">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>        
+          </template>
+
+          <br/>
+          <template  v-if="element.caseFalseNode!=null && Object.keys(element.caseFalseNode).length > 0">
+            <tree-element :element="element.caseFalseNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'False' "></tree-element>
+          </template>
+          <template v-else>
+            <span> Aggiungi nodo false </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" @click="addNode('caseFalseNode')">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>        
+          </template>
+
+          <br/>
+          <template  v-if="element.caseFollowingNode!=null && Object.keys(element.caseFollowingNode).length > 0">
+            <tree-element :element="element.caseFollowingNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'Following' "></tree-element>
+          </template>
+          <template v-else>
+            <span> Aggiungi nodo seguente </span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" @click="addNode('caseFollowingNode')">
+              <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+            </svg>        
+          </template>
+
+
+        </div>
+      `,
+      props: ["element", "indentLevel", "nodePath"],
+      methods: {
+        changeDataOffCanvas() {
+          this.$parent.changeCurrentDataOffCanvas(this.element, this.nodePath);
+        },
+        changeCurrentDataOffCanvas(element, nodePath){
+          this.$parent.changeCurrentDataOffCanvas(element, nodePath);
+        },
+        addNode(caseNode){
+          this.element[caseNode] = {
+            "trueConditions": [""],
+            "falseConditions": [""],
+            "assertTrue": "",
+            "assertFalse": "",
+            "caseTrueNode": null,
+            "caseFalseNode": null,
+            "caseFollowingNode": null        
+          };
+          this.changeDataOffCanvas();
+        },
+        deleteNode(){
+          if(!window.confirm("Sei sicuro di voler eliminare il campo e tutti i successivi?")) return;
+
+          if(this.$parent.element!=null && this.$parent.nodePath!=null && this.$parent.indentLevel!=null){
+            let parentElement = this.$parent.element;
+            if(parentElement.caseTrueNode==this.element) parentElement.caseTrueNode = null;
+            if(parentElement.caseFalseNode==this.element) parentElement.caseFalseNode = null
+            if(parentElement.caseFollowingNode==this.element) parentElement.caseFollowingNode = null;
+            this.changeDataOffCanvas();
+          }
+          else{
+            window.alert("Attenzione: non si può rimuovere il nodo principale");
+          }
+        }
+      },
+      mounted(){
+        this.elementType = "tree-element";
+      },
+      mixins: [""]
+    });
+  
+  });
+
+
+  
+</script>
