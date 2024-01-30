@@ -19,29 +19,28 @@
         "cf1",
         "cf2"
       ],
-      "assertTrue": "at1",
+      "assertTrue": "ciao.setMyVar(true);",
       "assertFalse": "at2",
-      "caseTrueNode": {
+      "caseTrueNode": null,
+      "caseFalseNode": {
         "commonConditions": [
           [
-            "ct1;\n",
-            "True01"
+            "",
+            ""
           ]
         ],
         "trueConditions": [
-          "cta1;"
+          ""
         ],
         "falseConditions": [
-          "cf2;",
-          "cf3"
+          ""
         ],
-        "assertTrue": "at2;",
-        "assertFalse": "at3; ",
+        "assertTrue": "",
+        "assertFalse": "",
         "caseTrueNode": null,
         "caseFalseNode": null,
         "caseFollowingNode": null
       },
-      "caseFalseNode": null,
       "caseFollowingNode": null
     }
   }
