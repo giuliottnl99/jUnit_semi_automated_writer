@@ -13,6 +13,7 @@
         "assertFalse": "Assert.assertFalse(myClass.isVarTest1());",
         "caseTrueNode": null,
         "caseFalseNode": {
+            "commonConditions" : [["h1", "true1"], ["h1", "true1"]],
             "trueConditions": ["toChange=2"],
             "falseConditions": ["//toChange!=2 -> \ntoChange=3"],
             "assertTrue": "Assert.assertTrue(myClass.isVarTest2());",

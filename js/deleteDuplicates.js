@@ -105,7 +105,7 @@ function deleteDuplicatesJUnit(strToChange) {
   /** Verify if the element must be removed. If it is removed, return true; */
   function verifyAndRemoveDataFromListOfInstructions(listOfInstructions, positionToRemove){
     for(instruction of listOfInstructions){
-      let firstPart = listOfInstructions.part1;
+      let firstPart = instruction.part1;
       //I should not remove empty strings
       if(firstPart==null || firstPart==""){
         return false;

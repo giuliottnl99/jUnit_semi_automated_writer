@@ -1,0 +1,47 @@
+{
+    "header": {
+      "commonHeader": "int myVar=7",
+      "methodName": "myMethod",
+      "callOfTheMethodStr": "myMethod(arg1, arg2)",
+      "throwsStr": "throws Exception"
+    },
+    "firstNode": {
+      "commonConditions": [
+        [
+          "",
+          ""
+        ]
+      ],
+      "trueConditions": [
+        "ct1"
+      ],
+      "falseConditions": [
+        "cf1",
+        "cf2"
+      ],
+      "assertTrue": "at1",
+      "assertFalse": "at2",
+      "caseTrueNode": {
+        "commonConditions": [
+          [
+            "ct1;\n",
+            "True01"
+          ]
+        ],
+        "trueConditions": [
+          "cta1;"
+        ],
+        "falseConditions": [
+          "cf2;",
+          "cf3"
+        ],
+        "assertTrue": "at2;",
+        "assertFalse": "at3; ",
+        "caseTrueNode": null,
+        "caseFalseNode": null,
+        "caseFollowingNode": null
+      },
+      "caseFalseNode": null,
+      "caseFollowingNode": null
+    }
+  }

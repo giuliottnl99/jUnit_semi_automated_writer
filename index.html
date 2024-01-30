@@ -34,20 +34,51 @@
 
 
 <p id="jsonBody"></p>
-<tree-element :element="completeJson.firstNode" :indent-level="0" :node-path="'base'"></tree-element>
+<tree-element :element="completeJson.firstNode" :indent-level="0" :node-path="'base'" :suffix-sequence="''" :previous-conditions="[['', '']]"></tree-element>
 
    
-<div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
-  <div class="offcanvas-header">
+<div style="width: 75%;" class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="offcanvasWithBothOptionsLabel">
+  <div class="offcanvas-header" style="width: 75%;">
     <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">{{currentTitleOffCanvas}}</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <!-- <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button> -->
   </div>
-  <div class="offcanvas-body">
+  <div class="offcanvas-body" style="width: 75%;">
     <template v-if="canvasCase == 'body'">
+      <div class="row">
+        <div class="col-6">
+          <p>Condizioni precedenti readonly: </p>
+        </div>
+        <div class="col-6">
+          <p>Condizioni precedenti desiderate: </p>
+        </div>
+      </div>
+      <template template v-for="(cond, i) in previousConditions">
+        <div class="row" v-if="currentDataOffCanvas.commonConditions!=null">
+          <div class="col-6">
+            <textarea v-model="cond[0]" readonly="true" style="width: 100%;"></textarea>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-10">
+                <textarea v-model="currentDataOffCanvas.commonConditions[i][0]" style="width: 100%;"
+                  @change="generateOutputForCanvas"></textarea>
+              </div>
+              <div class="col-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy"
+                  viewBox="0 0 16 16" @click="copyPrecedentConditions(i)">
+                  <path fill-rule="evenodd"
+                    d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+
       <p>Condizioni true: </p> 
       <template v-for="(condition, i) in currentDataOffCanvas.trueConditions">
         <p>Condizione True {{(i+1)}}</p>
-        <textarea v-model="currentDataOffCanvas.trueConditions[i]" @change="showChangesInJson"></textarea>
+        <textarea v-model="currentDataOffCanvas.trueConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       </template> 
       <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.trueConditions)">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" >
@@ -65,7 +96,7 @@
       <p>Condizioni false: </p> 
       <template v-for="(condition, i) in currentDataOffCanvas.falseConditions">
         <p>Condizione False {{(i+1)}}</p>
-        <textarea v-model="currentDataOffCanvas.falseConditions[i]" @change="showChangesInJson"></textarea>
+        <textarea v-model="currentDataOffCanvas.falseConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       </template>
       <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.falseConditions)">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16" >
@@ -81,23 +112,27 @@
       </button>
 
       <p> Assert true: </p>
-      <textarea v-model="currentDataOffCanvas.assertTrue" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.assertTrue" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       <p> Assert false: </p>
-      <textarea v-model="currentDataOffCanvas.assertFalse" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.assertFalse" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
+      
+      <p> Metodi automatici associati: </p>
+      <textarea readonly="false" rows="100" style="width: 100%" v-model="outputCanvas"></textarea>
+      
     </template>
 
     <template v-if="canvasCase == 'header'">
       <p>Codice comune a ogni metodo di test: </p> 
-      <textarea v-model="currentDataOffCanvas.commonHeader" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.commonHeader" @change="showChangesInJson" style="width: 100%;"></textarea>
       
       <p>Nome del metodo: </p> 
-      <textarea v-model="currentDataOffCanvas.methodName" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.methodName" @change="showChangesInJson" style="width: 100%;"></textarea>
       
       <p>Stringa chiamata del metodo: </p> 
-      <textarea v-model="currentDataOffCanvas.callOfTheMethodStr" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.callOfTheMethodStr" @change="showChangesInJson" style="width: 100%;"></textarea>
       
       <p>Eccezioni da lanciare: </p> 
-      <textarea v-model="currentDataOffCanvas.throwsStr" @change="showChangesInJson"></textarea>
+      <textarea v-model="currentDataOffCanvas.throwsStr" @change="showChangesInJson" style="width: 100%;"></textarea>
 
     </template>
   </div>
@@ -127,14 +162,14 @@
 
 <br/>
 <p id="insertJsonToTransform"> </p>
-<textarea rows="30" style="width: 100%" id="jsonDataStr" @change="showStructure"></textarea>
+<textarea rows="30" style="width: 100%" v-model="jsonDataStr" id="jsonDataStr" @change="showStructure"></textarea>
 <label for="flgCarryOneResult" id="lblCarryOneResult">  </label><br>
 <input type="checkbox" id="flgCarryOneResult">
-<button onclick="generateOutput()" id="generateOutputButton">  </button>
+<button @click="generateOutput()" id="generateOutputButton">  </button>
 
 <br/><br/><br/>
 <p> Output: </p>
-<textarea rows="30" style="width: 100%" id="outputResult"></textarea>
+<textarea rows="30" style="width: 100%" id="outputResult" v-model="output"></textarea>
 
 <script>  setLanguage("it", document.body.getElementsByTagName("*")) </script>
 
@@ -148,36 +183,43 @@
       data: {
         completeJson : {
           "header" : {"commonHeader" : "int myVar=7" , "methodName" : "myMethod", "callOfTheMethodStr": "myMethod(arg1, arg2)",  "throwsStr": "throws Exception"},
-          "firstNode" : { "trueConditions": [""], "falseConditions": [""], "assertTrue": "", "assertFalse": "", "caseTrueNode": null, "caseFalseNode": null, "caseFollowingNode": null
-        }
+          "firstNode" : { "commonConditions" : [["", ""]], "trueConditions": [""], "falseConditions": [""], "assertTrue": "", "assertFalse": "", "caseTrueNode": null, "caseFalseNode": null, "caseFollowingNode": null}
         },
         isComponentMounted : false,
         currentDataOffCanvas: [],
         currentTitleOffCanvas: "default path",
-        canvasCase: "body"
+        canvasCase: "body",
+        previousConditions : [ ["", ""] ],
+        output : "",
+        currentCanvasSuffixSequence: "",
+        outputCanvas : "",
+        jsonDataStr: ""
       },  
       methods: {
         showStructure(){
-          let jsonDataStr = document.getElementById("jsonDataStr").value;
-          if (jsonDataStr==null || jsonDataStr=="") jsonDataStr="[]"; 
-          this.completeJson = JSON.parse(jsonDataStr)!=null ? JSON.parse(jsonDataStr) : [];
+          //TODO: jsonDataStr viene passato come null
+          if (this.jsonDataStr==null || this.jsonDataStr=="") this.jsonDataStr="[]"; 
+          this.completeJson = JSON.parse(this.jsonDataStr)!=null ? JSON.parse(this.jsonDataStr) : [];
 
         },
         showChangesInJson(){
-          let jsonArea = document.getElementById("jsonDataStr");
-          jsonArea.value = JSON.stringify(this.completeJson, null, 2);
+          this.jsonDataStr = JSON.stringify(this.completeJson, null, 2);
         },
-        changeCurrentDataOffCanvas(elementData, nodePath) {
+        changeCurrentDataOffCanvas(elementData, nodePath, previousConditions, suffixSequence) {
           this.currentDataOffCanvas = elementData;
           this.currentTitleOffCanvas = "nodo" + nodePath;
+          this.currentCanvasSuffixSequence = suffixSequence;
           this.canvasCase = "body";
+          this.previousConditions = previousConditions;
           this.showChangesInJson();
+          this.$forceUpdate();
         },
         changeDataOffCanvasHeader(){
           this.currentDataOffCanvas = this.completeJson.header;
           this.currentTitleOffCanvas = "header";
           this.canvasCase = "header";
           this.showChangesInJson();
+          this.$forceUpdate();
         },
         addCondition(conditionsArray){
           if(conditionsArray==null) conditionsArray=[""];  
@@ -189,6 +231,95 @@
         deleteCondition(conditionsArray){
           if(!window.confirm("Sei sicuro di voler eliminare il campo?")) return;
           conditionsArray.splice(conditionsArray.length - 1, 1);
+        },
+        copyPrecedentConditions(index){
+          this.currentDataOffCanvas.commonConditions[index] = this.previousConditions[index]; 
+          this.showChangesInJson();
+          this.$forceUpdate();
+        },
+        generateOutput(){
+          this.output = "";
+          this.generateOutputRecursive(this.completeJson.firstNode);
+
+        },
+        generateOutputRecursive(passedNode){
+          if(passedNode.trueConditions!=null && passedNode.commonConditions!=null){
+            for(const commonC of passedNode.commonConditions){
+              for(const i in passedNode.trueConditions){
+                const trueC = passedNode.trueConditions[i];
+                const strCond = deleteDuplicatesJUnit(commonC[0] + trueC);
+                if(passedNode.assertTrue!=null && passedNode.assertTrue!="")
+                  this.output += this.createMethod(strCond, passedNode.assertTrue, commonC[1] + "True" + (parseInt(i)+1));
+                
+              }
+            }
+          }
+
+          if(passedNode.falseConditions!=null && passedNode.commonConditions!=null){
+            for(const commonC of passedNode.commonConditions){
+              for(const i in passedNode.falseConditions){
+                  const falseC = passedNode.falseConditions[i];
+    
+                const strCond = deleteDuplicatesJUnit(commonC[0] + falseC);
+                
+                if(passedNode.assertFalse!=null && passedNode.assertFalse!="")
+                  this.output += this.createMethod(strCond, passedNode.assertFalse, commonC[1] + "False" + (parseInt(i)+1));
+              }
+            }
+          }
+
+          //Va gestito problema suffix nel recall
+          if(passedNode.caseTrueNode!=null){
+            this.generateOutputRecursive(passedNode.caseTrueNode);
+          }
+
+          if(passedNode.caseFalseNode!=null){
+            this.generateOutputRecursive(passedNode.caseFalseNode);
+          }
+
+          if(passedNode.caseFollowingNode!=null){
+            this.generateOutputRecursive(passedNode.caseFollowingNode);
+          }
+        },
+        createMethod(conditions, assert, suffixSequence){
+          if (assert == null) {
+            assert = "";
+          }
+          let result = '';
+          result += "@Test\n";
+          result += 'public void ' + this.completeJson.header.methodName + '_Test_Sequence' + suffixSequence + '() ' + this.completeJson.header.throwsStr + ' {\n';
+          result += this.completeJson.header.commonHeader + '\n';
+          result += conditions + '\n';
+          result += this.completeJson.header.callOfTheMethodStr + '\n';
+          result += assert + '\n}\n\n';
+          return result;
+        },
+        generateOutputForCanvas(){
+          this.outputCanvas="";
+          const passedNode = this.currentDataOffCanvas;
+          if(passedNode.trueConditions!=null && passedNode.commonConditions!=null){
+            for(const commonC of passedNode.commonConditions){
+              for(const i in passedNode.trueConditions){
+                const trueC = passedNode.trueConditions[i];
+                const strCond = deleteDuplicatesJUnit(commonC[0] + trueC);
+                if(passedNode.assertTrue!=null && passedNode.assertTrue!="")
+                  this.outputCanvas += this.createMethod(strCond, passedNode.assertTrue, commonC[1] + "True" + (parseInt(i)+1));
+              }
+            }
+          }
+
+          if(passedNode.falseConditions!=null && passedNode.commonConditions!=null){
+            for(const commonC of passedNode.commonConditions){
+              for(const i in passedNode.falseConditions){
+                const falseC = passedNode.falseConditions[i];
+                const strCond = deleteDuplicatesJUnit(commonC[0] + falseC);
+                
+                if(passedNode.assertFalse!=null && passedNode.assertFalse!="")
+                  this.outputCanvas += this.createMethod(strCond, passedNode.assertFalse, commonC[1] + "False" + (parseInt(i)+1));
+              }
+            }
+          }
+          this.showChangesInJson();
         }
       },
       mounted(){
@@ -219,7 +350,7 @@
         <br/>
 
           <template  v-if="element.caseTrueNode!=null && Object.keys(element.caseTrueNode).length > 0">
-            <tree-element :element="element.caseTrueNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'True' "></tree-element>
+            <tree-element :element="element.caseTrueNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'True' " :suffix-sequence="suffixSequence + 'True'" :previous-conditions="arrayConcat(element.trueConditions, previousConditions, 'True')"></tree-element>
           </template>
           <template v-else>
             <span> Aggiungi nodo true </span>
@@ -231,7 +362,7 @@
 
           <br/>
           <template  v-if="element.caseFalseNode!=null && Object.keys(element.caseFalseNode).length > 0">
-            <tree-element :element="element.caseFalseNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'False' "></tree-element>
+            <tree-element :element="element.caseFalseNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'False' " :suffix-sequence="suffixSequence + 'False'" :previous-conditions="arrayConcat(element.falseConditions, previousConditions, 'False')"></tree-element>
           </template>
           <template v-else>
             <span> Aggiungi nodo false </span>
@@ -243,7 +374,7 @@
 
           <br/>
           <template  v-if="element.caseFollowingNode!=null && Object.keys(element.caseFollowingNode).length > 0">
-            <tree-element :element="element.caseFollowingNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'Following' "></tree-element>
+            <tree-element :element="element.caseFollowingNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'Following' " :suffix-sequence="suffixSequence + 'Following'" :previous-conditions="arrayConcat([''], previousConditions, 'Following')></tree-element>
           </template>
           <template v-else>
             <span> Aggiungi nodo seguente </span>
@@ -256,16 +387,17 @@
 
         </div>
       `,
-      props: ["element", "indentLevel", "nodePath"],
+      props: ["element", "indentLevel", "nodePath", "previousConditions", "suffixSequence"],
       methods: {
         changeDataOffCanvas() {
-          this.$parent.changeCurrentDataOffCanvas(this.element, this.nodePath);
+          this.$parent.changeCurrentDataOffCanvas(this.element, this.nodePath, this.previousConditions, this.suffixSequence);
         },
-        changeCurrentDataOffCanvas(element, nodePath){
-          this.$parent.changeCurrentDataOffCanvas(element, nodePath);
+        changeCurrentDataOffCanvas(element, nodePath, previousConditions, suffixSequence){
+          this.$parent.changeCurrentDataOffCanvas(element, nodePath, previousConditions, suffixSequence);
         },
         addNode(caseNode){
           this.element[caseNode] = {
+            "commonConditions" : [["", ""]],
             "trueConditions": [""],
             "falseConditions": [""],
             "assertTrue": "",
@@ -289,12 +421,22 @@
           else{
             window.alert("Attenzione: non si può rimuovere il nodo principale");
           }
+        },
+        arrayConcat(newConditions, currentConditions, toAddPath){
+          let result = [];
+          for(i in newConditions){
+            const newC = newConditions[i];
+            for(currentC of currentConditions){
+              const toAddStr = deleteDuplicatesJUnit(currentC[0] + newC);
+              result.push([toAddStr, currentC[1]+toAddPath + (parseInt(i)+1)]);
+            }
+          }
+          return result;
         }
       },
       mounted(){
         this.elementType = "tree-element";
-      },
-      mixins: [""]
+      }
     });
   
   });
