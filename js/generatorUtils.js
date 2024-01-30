@@ -1,26 +1,3 @@
-/** Questa funzione ritorna true se c'è un oggetto equivalente nell'array 
- * Compensa il fatto che il metodo "includes" ritorna true solo se ci sono oggetti IDENTICI
- */
-function includesNotOnlyIdentical(str, array) {
-  for (let i = 0; i < array.length; i++) {
-    if (array[i] == str) {
-      return true;
-    }
-  }
-  return false;
-}
-
-/** Date due liste, aggiunge alla prima gli elementi della seconda */
-function mergeList(list1, list2) {
-  if (list1 == null || list2 == null) {
-    throw new Error("One of the lists to be merged are null");
-  }
-  for (let i = 0; i < list2.length; i++) {
-    list1.push(list2[i]);
-  }
-}
-
-
 /** Prende una riga e la pulisce dai commenti*/
 function pulisciDaCommenti(javacode) {
   let righe = javacode.split("\n");
@@ -39,41 +16,6 @@ function pulisciDaCommenti(javacode) {
   }
   return codicePulito;
 }
-
-/** Questa funzione elimina i doppioni dagli Assert*/
-function pulisciDoppioniAssert(risultatoAssert) {
-  //prende uno a uno i valori separti da ";"
-  let istruzioni = risultatoAssert.replace("\n", "").split(";");
-  let traParentesiGiaInserite = [];
-  let result = "";
-  //prendo una a una le istruzioni tra parentesi (sevre metodo) a partire dal fondo e le inserisco in istruzioniGiaInserite
-  // Se l'istruzione c'è già -> skippo
-  // Se non c'è già -> Aggiungo nel vettore  nel result = istruzione + "\n" + result
-  for (let i = istruzioni.length - 1; i >= 0; i--) {
-    let traParentesi = prendiParentesiAssert(istruzioni[i]);
-    if (includesNotOnlyIdentical(traParentesi, traParentesiGiaInserite)) {
-      continue;
-    }
-    else {
-      traParentesiGiaInserite.push(traParentesi);
-      result = istruzioni[i] + ";\n" + result;
-    }
-  }
-  return result;
-
-}
-
-
-function addEmptyStringInConditionsListEmpty(conditionTrue, conditionFalse) {
-  //se conditionTrue o conditionFalse fossero array completamente vuoti, devono comunque avere dentro una stringa vuota! -> Altrimenti non costruisce le stringhe finali
-  if (conditionTrue.length == 0) {
-    conditionTrue.push("");
-  }
-  if (conditionFalse.length == 0) {
-    conditionFalse.push("");
-  }
-}
-
 
 /**Questa funzione ritorna il valore tra le parentesi degli assert [(]es. assertTrue(form.isFlgT()) -> ritorna form.isFlgT() ] */
 function prendiParentesiAssert(riga) {
@@ -121,40 +63,4 @@ function deleteNotAllowedCharacters(idDoc) {
   var cleanText = badText.replace(/\n/g, "\\n").replace(/\t/g, "\\t").replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\\\\/g, "\\");
   textareaToChange.value = cleanText;
 }
-
-
-//** Method of chatGpt to make a deep clone of a matrix */
-function deepClone(obj) {
-  if (obj === null || typeof obj !== 'object') {
-    return obj;
-  }
-
-  //clone arrays:
-  if (Array.isArray(obj)) {
-    const arrCopy = [];
-    for (let i = 0; i < obj.length; i++) {
-      arrCopy[i] = deepClone(obj[i]);
-    }
-    return arrCopy;
-  }
-
-  //clone String:
-  if(typeof obj === 'string'){
-    let objCopy = obj.slice();
-    return objCopy;
-  }
-
-  //clone objects:
-  const objCopy = {};
-  for (const key in obj) {
-    if (obj.hasOwnProperty(key)) {
-      objCopy[key] = deepClone(obj[key]);
-    }
-  }
-
-
-  return objCopy;
-}
-
-
 

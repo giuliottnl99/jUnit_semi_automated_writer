@@ -1,3 +1,5 @@
+//This script contains all the fundamental logic to clean duplicates
+
 function deleteDuplicatesInTextArea(strTextAreaId){
   let textArea = document.getElementById(strTextAreaId);
   let strToChange = textArea.value;
