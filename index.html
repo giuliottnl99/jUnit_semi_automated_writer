@@ -30,7 +30,7 @@
 
 
 
-<p id="jsonBody"></p>
+<p id="jsonBody"> {{labels.bodyInfo}}</p>
 <tree-element :element="completeJson.firstNode" :indent-level="0" :node-path="'base'" :suffix-sequence="''" :previous-conditions="[['', '']]"  :labels="labels"></tree-element>
 
    
@@ -42,10 +42,10 @@
     <template v-if="canvasCase == 'body'">
       <div class="row">
         <div class="col-6">
-          <p>Condizioni precedenti readonly: </p>
+          <p> {{labels.previousConditionsReadonly}} Condizioni precedenti readonly: </p>
         </div>
         <div class="col-6">
-          <p>Condizioni precedenti desiderate: </p>
+          <p>{{labels.previousConditionsDesidered}} Condizioni precedenti desiderate: </p>
         </div>
       </div>
       <template v-for="(cond, i) in previousConditions">
@@ -71,9 +71,9 @@
         </div>
       </template>
 
-      <p>Condizioni true: </p> 
+      <p>{{labels.trueConditions}}</p> 
       <template v-for="(condition, i) in currentDataOffCanvas.trueConditions">
-        <p>Condizione True {{(i+1)}}</p>
+        <p>{{labels.trueConditionNTime}}  {{(i+1)}}</p>
         <textarea v-model="currentDataOffCanvas.trueConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       </template> 
       <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.trueConditions)">
@@ -89,9 +89,9 @@
         </svg>
       </button>
 
-      <p>Condizioni false: </p> 
+      <p>{{labels.falseConditions}} </p> 
       <template v-for="(condition, i) in currentDataOffCanvas.falseConditions">
-        <p>Condizione False {{(i+1)}}</p>
+        <p>{{labels.falseConditionNTime}}  {{(i+1)}}</p>
         <textarea v-model="currentDataOffCanvas.falseConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       </template>
       <button class="btn btn-success" type="button" @click="addCondition(currentDataOffCanvas.falseConditions)">
@@ -108,7 +108,7 @@
       </button>
       <br/>
 
-      <span> Assert true: </span>
+      <span> {{labels.assertTrue}} </span>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-code-square" viewBox="0 0 16 16" @click="transformAssert(true)">
         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
         <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0m2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0"/>
@@ -116,32 +116,32 @@
       <textarea v-model="currentDataOffCanvas.assertTrue" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
       
       <br/>
-      <span> Assert false: </span>
+      <span> {{labels.assertFalse}} </span>
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-code-square" viewBox="0 0 16 16" @click="transformAssert(false)">
         <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
         <path d="M6.854 4.646a.5.5 0 0 1 0 .708L4.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0m2.292 0a.5.5 0 0 0 0 .708L11.793 8l-2.647 2.646a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708 0"/>
       </svg>
       <textarea v-model="currentDataOffCanvas.assertFalse" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
 
-      <p> Metodi automatici associati: </p>
+      <p>{{labels.associatedGenerated}}  </p>
       <textarea readonly="false" rows="100" style="width: 100%" v-model="outputCanvas"></textarea>
       
     </template>
 
     <template v-if="canvasCase == 'header'">
-      <p>Codice comune a ogni metodo di test: </p> 
+      <p>{{labels.commonHeader}}</p> 
       <textarea v-model="currentDataOffCanvas.commonHeader" @change="showChangesInJson" style="width: 100%;"></textarea>
       
-      <p>Nome del metodo: </p> 
+      <p>{{labels.methodName}}</p> 
       <textarea v-model="currentDataOffCanvas.methodName" @change="showChangesInJson" style="width: 100%;"></textarea>
       
-      <p>Stringa chiamata del metodo: </p> 
+      <p>{{labels.callOfTheMethodStr}}</p> 
       <textarea v-model="currentDataOffCanvas.callOfTheMethodStr" @change="showChangesInJson" style="width: 100%;"></textarea>
       
-      <p>Eccezioni da lanciare: </p> 
+      <p>{{labels.throwsStr}}</p> 
       <textarea v-model="currentDataOffCanvas.throwsStr" @change="showChangesInJson" style="width: 100%;"></textarea>
-
     </template>
+    
   </div>
 </div>
 
@@ -152,7 +152,7 @@
 <textarea rows="30" style="width: 100%" v-model="jsonDataStr" id="jsonDataStr" @change="showStructure"></textarea>
 <label for="flgCarryOneResult" id="lblCarryOneResult">  </label><br>
 <input type="checkbox" id="flgCarryOneResult">
-<button @click="generateOutput()"> Genera output </button>
+<button @click="generateOutput()"> {{labels.generateOutput}}</button>
 
 <br/><br/><br/>
 <p> Output: </p>

@@ -7,11 +7,24 @@ document.addEventListener("DOMContentLoaded", (event) => {
             langChosen: "en",
             labels: [],
             allLabels: {
-                "nodePrefixName": { "en": "This is the node", "it": "Questo è il nodo" },
+                "nodePrefixName": { "en": "This is the node", "it": "Questo \u00E8 il nodo" },
                 "addTrueNode": { "en": "Add true node", "it": "Aggiungi nodo true" },
                 "addFalseNode": { "en": "Add false node", "it": "Aggiungi nodo false" },
                 "addFollowingNode": { "en": "Add node for following code", "it": "Aggiungi nodo codice seguente" },
-
+                "previousConditionsReadonly": { "en": "Generated previous conditions", "it": "Condizioni precedenti generate:" },
+                "previousConditionsDesidered": { "en": "Desidered previous conditions", "it": "Condizioni precedenti desiderate:" },
+                "trueConditions": { "en": "True conditions", "it": "Condizioni true" },
+                "trueConditionNTime": { "en": "True condition", "it": "Condizione true:" },
+                "falseConditions": { "en": "False conditions", "it": "Condizioni false" },
+                "falseConditionNTime": { "en": "False condition:", "it": "condizione false:" },
+                "assertTrue": { "en": "Things to assert in case of true:", "it": "Cose da asserire se true:" },
+                "assertFalse": { "en": "Things to assert in case of false:", "it": "Cose da asserire se false:" },
+                "associatedGenerated": { "en": "Methods associated:", "it": "Metodi associati:" },
+                "commonHeader": { "en": "Common code for every test method:", "it": "Codice comune a ogni metodo di test:" },
+                "methodName": { "en": "Method name:", "it": "Nome del metodo:" },
+                "callOfTheMethodStr": { "en": "Method call string:", "it": "Stringa chiamata del metodo:" },
+                "throwsStr": { "en": "Exceptions to be thrown:", "it": "Eccezioni da lanciare:" },
+                "generateOutput": { "en": "Generate output:", "it": "Genera output:" },
             }
 
         },
@@ -22,9 +35,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 for (const key in this.allLabels) {
                     this.labels[key] = this.allLabels[key][lang] != null ? this.allLabels[key][lang] : "";
                 }
-            },
-            getLabels(){
-                return this.labels;
             }
         },
         mounted() {
@@ -50,7 +60,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         currentCanvasSuffixSequence: "",
         outputCanvas : "",
         jsonDataStr: "",
-        labels: null
       },  
       methods: {
         showStructure(){
@@ -204,7 +213,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
         this.showChangesInJson();
         this.showStructure();
         this.isComponentMounted = true;
-        this.labels = this.getLabels();
       },
       components: ["tree-element", "show-data-element"],
       mixins: [languages]
