@@ -2,45 +2,68 @@
 <html>
 <head>
     <script src="js/generatorUtils.js"></script>
-    <script src="js/generatorLogic.js"></script>
     <script src="js/assertTransformationLogic.js"></script>
     <script src="js/CondizioneDaVerificare.js"></script>
     <script src="js/creazioneCondizioni.js"></script>
-    <script src ="js/generatorLogic.js"></script>
     <script src ="js/deleteDuplicates.js"></script>
-    <script src = "commons/languages.js"></script>
+    <script src="js/languages.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
 
 </head>
 <body>
-    <div style="display: grid; grid-template-columns : 3fr 1fr;"> 
-        <div></div>
-        <div style="display: grid; grid-template-columns : 5fr 1fr 5fr;">
-            <img src="img\flags\IT_FLAG.png" style="height: 75%; width: 100%" onClick="setLanguage('it', document.body.getElementsByTagName('*'))"/>
+    <div id="helperMethods">
+        <div style="display: grid; grid-template-columns : 3fr 1fr;"> 
             <div></div>
-            <img src="img\\flags\EN_FLAG.png" style="width: 100%" onClick="setLanguage('en', document.body.getElementsByTagName('*'))"/>    
+            <div style="display: grid; grid-template-columns : 5fr 1fr 5fr;">
+                <img src="img\flags\IT_FLAG.png" style="height: 75%; width: 100%" @click="setLanguage('it')"/>
+                <div></div>
+                <img src="img\\flags\EN_FLAG.png" style="width: 100%" @click="setLanguage('en')"/>    
+            </div>
         </div>
-    </div>
-    
-    <p id="toTransformInAssert"> </p>
+            
+    <p> {{labels.toTransformInAssert}}</p>
     <textArea id="assertDaTrasformare" style="width: 100%" rows="10"></textArea>
-    <button onclick="trasformaInAssert('assertDaTrasformare')" id="tranformInAssert"></button>
+    <button onclick="trasformaInAssert('assertDaTrasformare')" >{{labels.toTransformInAssert}}</button>
 
     <br/>
-    <p id="toTransformCondition">  </p>
+    <p> {{labels.toTransformCondition}} </p>
     <textArea style="width: 100%" id="condizioneDaTrasformare" rows="10"></textArea>
-    <button onclick="trasformaCondizione('condizioneDaTrasformare', true)" id="transformTrue"></button>
-    <button onclick="trasformaCondizione('condizioneDaTrasformare', false)" id="transformFalse"></button>
+    <button onclick="trasformaCondizione('condizioneDaTrasformare', true)">{{labels.transformTrue}}</button>
+    <button onclick="trasformaCondizione('condizioneDaTrasformare', false)">{{labels.transformFalse}}</button>
 
     <br/>
-    <p id="deleteNotALlowedCharactersParagraph"> </p>
+    <p>{{labels.deleteNotALlowedCharactersParagraph}} </p>
     <textarea rows="10" style="width: 100%" id="textAreaDeleteNotAllowedCharacters"></textarea>
-    <button onclick="deleteNotAllowedCharacters('textAreaDeleteNotAllowedCharacters')" id="deletUnallowedCharsInJson"></button>
+    <button onclick="deleteNotAllowedCharacters('textAreaDeleteNotAllowedCharacters')">{{labels.deleteUnallowedCharsButton}}</button>
 
     <br/>
-    <p id="deleteDuplicates"> </p>
+    <p>{{labels.deleteDuplicates}} </p>
     <textarea rows="10" style="width: 100%" id="textAreaDeleteDuplicates"></textarea>
-    <button onclick="deleteDuplicatesInTextArea('textAreaDeleteDuplicates')" id="deleteDuplicates"></button>
+    <button onclick="deleteDuplicatesInTextArea('textAreaDeleteDuplicates')">{{labels.deleteDuplicatesButton}}</button>
+</div>
 </body>
-<script>  setLanguage("en", document.body.getElementsByTagName("*")) </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+
+        let myVue = new Vue({
+            el: "#helperMethods",
+            mixins: [languages],
+            data:{
+            },
+            methods : {
+                callMethodToSeeData(){
+                    ciao = "ciao";
+                }
+            },
+            mounted(){
+                this.callMethodToSeeData();
+            }
+
+        });
+    });
+
+</script>
 </html>
+

@@ -1,9 +1,9 @@
   <script src="js/generatorUtils.js"></script>
   <script src="js/assertTransformationLogic.js"></script>
-  <script src="js/CondizioneDaVerificare.js"></script>
   <script src="js/creazioneCondizioni.js"></script>
   <script src="js/deleteDuplicates.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/languages.js"></script>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -71,7 +71,6 @@
         </div>
       </template>
 
-      <p>{{labels.trueConditions}}</p> 
       <template v-for="(condition, i) in currentDataOffCanvas.trueConditions">
         <p>{{labels.trueConditionNTime}}  {{(i+1)}}</p>
         <textarea v-model="currentDataOffCanvas.trueConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
@@ -89,7 +88,6 @@
         </svg>
       </button>
 
-      <p>{{labels.falseConditions}} </p> 
       <template v-for="(condition, i) in currentDataOffCanvas.falseConditions">
         <p>{{labels.falseConditionNTime}}  {{(i+1)}}</p>
         <textarea v-model="currentDataOffCanvas.falseConditions[i]" @change="generateOutputForCanvas" style="width: 100%;"></textarea>
@@ -151,7 +149,6 @@
 <p id="insertJsonToTransform"> </p>
 <textarea rows="30" style="width: 100%" v-model="jsonDataStr" id="jsonDataStr" @change="showStructure"></textarea>
 <label for="flgCarryOneResult" id="lblCarryOneResult">  </label><br>
-<input type="checkbox" id="flgCarryOneResult">
 <button @click="generateOutput()"> {{labels.generateOutput}}</button>
 
 <br/><br/><br/>
