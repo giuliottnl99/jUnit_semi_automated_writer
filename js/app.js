@@ -25,6 +25,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 "callOfTheMethodStr": { "en": "Method call string:", "it": "Stringa chiamata del metodo:" },
                 "throwsStr": { "en": "Exceptions to be thrown:", "it": "Eccezioni da lanciare:" },
                 "generateOutput": { "en": "Generate output:", "it": "Genera output:" },
+                "confirmNodeDeletion": { "en": "Are you sure you want to delete this node and all the followings?", "it": "Sei sicuro di voler cancellare questo nodo e tutti i suoi figli?" },
+                "confirmFieldDeletion": { "en": "Are you sure you want to delete the last condition?", "it": "Sei sicuro di voler cancellare l'ultima condizione?"},
             }
 
         },
@@ -79,12 +81,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
             this.currentDataOffCanvas.assertFalse = creaAssert(this.currentDataOffCanvas.assertFalse);
           }
         },
+        //thi method make sure "commonConditions" has the same dimension as previousConditions
+        initializeCommonConditions(previousConditions, commonConditions){
+          if(commonConditions==null) commonConditions=[];
+          let i =0; 
+          for(const prevC of previousConditions){
+            if(commonConditions[i]==null){
+              commonConditions.push(["", prevC[1]])
+            }
+            i++;
+          }
+          //remove "excessive" data in "commonConditions":
+          commonConditions.splice(i);
+        },
         changeCurrentDataOffCanvas(elementData, nodePath, previousConditions, suffixSequence) {
           this.currentDataOffCanvas = elementData;
           this.currentTitleOffCanvas = "nodo" + nodePath;
           this.currentCanvasSuffixSequence = suffixSequence;
           this.canvasCase = "body";
           this.previousConditions = previousConditions;
+          this.initializeCommonConditions(this.previousConditions, this.currentDataOffCanvas.commonConditions);
           this.showChangesInJson();
           this.generateOutputForCanvas();
           this.$forceUpdate();
@@ -104,11 +120,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
           this.showChangesInJson();
         },
         deleteCondition(conditionsArray){
-          if(!window.confirm("Sei sicuro di voler eliminare il campo?")) return;
+          if(!window.confirm(this.labels.confirmFieldDeletion)) return;
           conditionsArray.splice(conditionsArray.length - 1, 1);
         },
         copyPrecedentConditions(index){
-          this.currentDataOffCanvas.commonConditions[index] = this.previousConditions[index]; 
+          this.currentDataOffCanvas.commonConditions[index][0] = this.previousConditions[index][0]; 
+          this.currentDataOffCanvas.commonConditions[index][1] = this.previousConditions[index][1]; 
           this.showChangesInJson();
           this.$forceUpdate();
         },
@@ -238,7 +255,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         <br/>
 
           <template  v-if="element.caseTrueNode!=null && Object.keys(element.caseTrueNode).length > 0">
-            <tree-element :element="element.caseTrueNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'True' " :suffix-sequence="suffixSequence + 'True'" :previous-conditions="arrayConcat(element.trueConditions, previousConditions, 'True')" :labels="labels"></tree-element>
+            <tree-element :element="element.caseTrueNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'True' " :suffix-sequence="suffixSequence + 'True'" :previous-conditions="arrayConcat(element.trueConditions, element.commonConditions, 'True')" :labels="labels"></tree-element>
           </template>
           <template v-else>
             <span> {{labels.addTrueNode}} </span>
@@ -250,7 +267,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
           <br/>
           <template  v-if="element.caseFalseNode!=null && Object.keys(element.caseFalseNode).length > 0">
-            <tree-element :element="element.caseFalseNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'False' " :suffix-sequence="suffixSequence + 'False'" :previous-conditions="arrayConcat(element.falseConditions, previousConditions, 'False')" :labels="labels"></tree-element>
+            <tree-element :element="element.caseFalseNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'False' " :suffix-sequence="suffixSequence + 'False'" :previous-conditions="arrayConcat(element.falseConditions, element.commonConditions, 'False')" :labels="labels"></tree-element>
           </template>
           <template v-else>
             <span> {{labels.addFalseNode}} </span>
@@ -262,7 +279,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
           <br/>
           <template  v-if="element.caseFollowingNode!=null && Object.keys(element.caseFollowingNode).length > 0">
-            <tree-element :element="element.caseFollowingNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'Following' " :suffix-sequence="suffixSequence + 'Following'" :previous-conditions="arrayConcat([''], previousConditions, 'Following')" :labels="labels"></tree-element>
+            <tree-element :element="element.caseFollowingNode" :indent-level="indentLevel+3" :style="{ marginLeft: indentLevel+3 + 'em' }" :node-path="nodePath + 'Following' " :suffix-sequence="suffixSequence + 'Following'" :previous-conditions="arrayConcat([''], element.commonConditions, 'Following')" :labels="labels"></tree-element>
           </template>
           <template v-else>
             <span> {{labels.addFollowingNode}} </span>
@@ -296,7 +313,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
           this.changeDataOffCanvas();
         },
         deleteNode(){
-          if(!window.confirm("Sei sicuro di voler eliminare il campo e tutti i successivi?")) return;
+          if(!window.confirm(this.labels.confirmNodeDeletion)) return;
 
           if(this.$parent.element!=null && this.$parent.nodePath!=null && this.$parent.indentLevel!=null){
             let parentElement = this.$parent.element;
